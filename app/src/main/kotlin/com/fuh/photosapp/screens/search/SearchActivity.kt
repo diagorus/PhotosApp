@@ -116,6 +116,9 @@ class SearchActivity : BaseActivity(), SearchContract.View {
                         .distinctUntilChanged()
                         .debounce(350, TimeUnit.MILLISECONDS)
                         .subscribeOnMain { query ->
+                            if (searchPhotosAdapter.items.isNotEmpty()) {
+                                searchPhotosAdapter.items = emptyList()
+                            }
                             presenter.searchPhotos(query)
                         }
 

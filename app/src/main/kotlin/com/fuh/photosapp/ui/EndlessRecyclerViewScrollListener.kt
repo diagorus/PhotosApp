@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 
-abstract class EndlessRecyclerViewScrollListener(params: Params) : RecyclerView.OnScrollListener() {
+abstract class EndlessRecyclerViewScrollListener(private val params: Params) : RecyclerView.OnScrollListener() {
 
     // Quantity of special items that should be ignored when calculating
     // moment of loading
@@ -102,7 +102,7 @@ abstract class EndlessRecyclerViewScrollListener(params: Params) : RecyclerView.
     // Call this method whenever performing new searches
     fun resetState() {
         this.currentPage = this.startingPageIndex
-        this.previousTotalItemCount = 0
+        this.previousTotalItemCount = params.initialItemsCount
         this.loading = true
     }
 
