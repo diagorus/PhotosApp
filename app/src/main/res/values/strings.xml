@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">PhotosApp</string>
+    <string name="file_provider_authorities">com.fuh.photosapp.fileprovider</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search…</string>
+    <string name="photos">Photos</string>
+    <string name="download">Download</string>
+    <string name="share">Share</string>
+    <string name="photo_downloaded">Photo downloaded</string>
+    <string name="open">Open</string>
+    <string name="share_subject">Look at this cool photo:</string>
+    <string name="downloading_started">Downloading started</string>
+    <string name="downloading_error">Downloading failed</string>
+    <string name="feed">Feed</string>
+    <string name="search_nothing_found">Nothing found. Try something else.</string>
+    <string name="search_welcome">Search for photos you like</string>
+</resources>
