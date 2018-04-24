@@ -11,8 +11,8 @@ import com.fuh.photosapp.R
 import com.fuh.photosapp.data.Photo
 import com.fuh.photosapp.screens.photopreview.PhotoPreviewActivity
 import com.fuh.photosapp.screens.search.SearchActivity
-import com.fuh.photosapp.ui.adapters.PhotosAdapter
 import com.fuh.photosapp.ui.EndlessRecyclerViewScrollListener
+import com.fuh.photosapp.ui.adapters.PhotosAdapter
 import com.fuh.photosapp.utils.base.BaseActivity
 import com.fuh.photosapp.utils.extensions.initBasicToolbar
 import com.fuh.photosapp.utils.extensions.stabilizeLayout
@@ -108,11 +108,13 @@ class FeedActivity : BaseActivity(), FeedContract.View {
                     }
                 }
         rvFeedPhotos.layoutManager = photosLayoutManager
+        rvFeedPhotos.setHasFixedSize(true)
+
 
         paginationScrollListener =
                 object : EndlessRecyclerViewScrollListener(
                         photosLayoutManager,
-                        Params(1, 5, 30, 1)
+                        Params(2, 20, 1)
                 ) {
 
                     override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {

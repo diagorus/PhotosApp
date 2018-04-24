@@ -33,9 +33,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/PreviewTheme" />
 
-        <activity
-            android:name=".screens.photopreview.NewPhotoPreviewActivity"
-            android:screenOrientation="portrait" />
+        <service
+            android:name=".screens.photopreview.PhotoDownloadJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -43,7 +43,7 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
     }
 
     private fun loadPhotos(pageNumber: Int): Single<List<Photo>> {
-        return NetApiClient.loadPhotos(pageNumber, 30, PhotosSortOrder.POPULAR)
+        return NetApiClient.loadPhotos(pageNumber, 20, PhotosSortOrder.POPULAR)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { view.showProgress() }
                 .doFinally { view.hideProgress() }

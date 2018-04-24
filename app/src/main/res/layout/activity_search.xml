@@ -45,7 +45,5 @@
                 android:text="@string/search_nothing_found"
                 android:textColor="@color/black" />
         </RelativeLayout>
-
-
     </RelativeLayout>
 </LinearLayout>

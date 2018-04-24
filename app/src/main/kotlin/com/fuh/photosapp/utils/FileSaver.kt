@@ -12,7 +12,7 @@ import java.io.FileOutputStream
  */
 class FileSaver(private val ctx: Context) {
 
-    fun saveFileToPublic(fileName: String, fileBytes: ByteArray): File {
+    fun saveFileToPublicDir(fileName: String, fileBytes: ByteArray): File {
         val rootDir = File(Environment.getExternalStorageDirectory(), ctx.getString(R.string.app_name))
         if (!rootDir.mkdirs()) {
             Timber.e("App directory wasnt created!")

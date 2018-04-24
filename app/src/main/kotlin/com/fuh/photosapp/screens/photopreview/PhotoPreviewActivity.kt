@@ -34,7 +34,7 @@ import java.io.File
 /**
  * Created by Nikita on 20.04.18.
  */
-class PhotoPreviewActivity : BaseActivity(), PhotoPreviewContract.View {
+class PhotoPreviewActivity : BaseActivity() {
 
     companion object {
 
@@ -69,18 +69,12 @@ class PhotoPreviewActivity : BaseActivity(), PhotoPreviewContract.View {
 
     override val layoutRes: Int = R.layout.activity_photopreview
 
-    override lateinit var presenter: PhotoPreviewContract.Presenter
-
     private lateinit var photo: Photo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         retrievePhoto()
-
-        presenter = PhotoPreviewPresenter(this, FileSaver(this))
-        presenter.start()
-
 
         initToolbar()
         initViews()
@@ -90,13 +84,6 @@ class PhotoPreviewActivity : BaseActivity(), PhotoPreviewContract.View {
         menuInflater.inflate(R.menu.menu_photopreview, menu)
 
         return true
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        presenter.stop()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -119,35 +106,6 @@ class PhotoPreviewActivity : BaseActivity(), PhotoPreviewContract.View {
             else -> super.onOptionsItemSelected(item)
         }
 
-    }
-
-    override fun showPhotoDownloadingStarted() {
-        toast(getString(R.string.downloading_started))
-    }
-
-    override fun showPhotoDownloadingError() {
-        toast(getString(R.string.downloading_error))
-    }
-
-    override fun showPhotoDownloadingFinished(file: File) {
-        Snackbar
-                .make(clPhotoPreviewContainer, getString(R.string.photo_downloaded), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.open)) {
-                    val intent = Intent()
-                            .apply {
-                                action = Intent.ACTION_VIEW
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-                                val photoUri = FileProvider.getUriForFile(
-                                        this@PhotoPreviewActivity,
-                                        getString(R.string.file_provider_authorities),
-                                        file
-                                )
-                                setDataAndType(photoUri, "image/*")
-                            }
-                    startActivity(intent)
-                }
-                .show()
     }
 
     private fun initToolbar() {
@@ -189,7 +147,8 @@ class PhotoPreviewActivity : BaseActivity(), PhotoPreviewContract.View {
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribeOnMain {
                     if (it) {
-                        presenter.downloadPhoto(photo)
+                        PhotoDownloadJobIntentService.enqueueWork(this, photo)
+                        toast("Downloading started in background...")
                     }
                 }
     }

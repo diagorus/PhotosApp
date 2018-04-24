@@ -71,7 +71,6 @@ class SearchActivity : BaseActivity(), SearchContract.View {
     }
 
     override fun showInitialFoundPhotos(data: List<Photo>) {
-        paginationScrollListener.resetState()
         searchPhotosAdapter.items = data
     }
 
@@ -119,6 +118,7 @@ class SearchActivity : BaseActivity(), SearchContract.View {
                             if (searchPhotosAdapter.items.isNotEmpty()) {
                                 searchPhotosAdapter.items = emptyList()
                             }
+                            paginationScrollListener.resetState()
                             presenter.searchPhotos(query)
                         }
 
@@ -163,11 +163,12 @@ class SearchActivity : BaseActivity(), SearchContract.View {
                     }
                 }
         rvSearchPhotos.layoutManager = photosLayoutManager
+        rvSearchPhotos.setHasFixedSize(true)
 
         paginationScrollListener =
                 object : EndlessRecyclerViewScrollListener(
                         photosLayoutManager,
-                        Params(1, 5, 30, 1)
+                        Params(5, 30, 1)
                 ) {
 
                     override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {

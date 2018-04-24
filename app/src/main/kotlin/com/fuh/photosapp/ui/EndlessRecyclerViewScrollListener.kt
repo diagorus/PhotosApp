@@ -7,9 +7,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 
 abstract class EndlessRecyclerViewScrollListener(private val params: Params) : RecyclerView.OnScrollListener() {
 
-    // Quantity of special items that should be ignored when calculating
-    // moment of loading
-    private var specialItemCount = params.specialItemCount
     // The minimum amount of items to have below your current scroll position
     // before loading more.
     private var visibleThreshold = params.visibleThreshold
@@ -57,18 +54,24 @@ abstract class EndlessRecyclerViewScrollListener(private val params: Params) : R
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
-        var lastVisibleItemPosition = 0
         val totalItemCount = layoutManager.itemCount
 
-        if (layoutManager is StaggeredGridLayoutManager) {
-            val lastVisibleItemPositions = (layoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
-            // get maximum element within the list
-            lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions) - specialItemCount
-        } else if (layoutManager is GridLayoutManager) {
-            lastVisibleItemPosition = (layoutManager as GridLayoutManager).findLastVisibleItemPosition() - specialItemCount
-        } else if (layoutManager is LinearLayoutManager) {
-            lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() - specialItemCount
+        val lastVisibleItemPosition = when (layoutManager) {
+            is StaggeredGridLayoutManager -> {
+                val lastVisibleItemPositions = (layoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+
+                // get maximum element within the list
+                getLastVisibleItem(lastVisibleItemPositions)
+            }
+            is GridLayoutManager -> (layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+            is LinearLayoutManager -> (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+            else -> throw IllegalArgumentException("Unsupported LayoutManager!")
         }
+
+        // If it isn’t currently loading, we check to see if we have breached
+        // the visibleThreshold and need to reload more data.
+        // If we do need to reload some more data, we execute onLoadMore to fetch the data.
+        // threshold should reflect how many total columns there are too
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
@@ -82,7 +85,7 @@ abstract class EndlessRecyclerViewScrollListener(private val params: Params) : R
         // If it’s still loading, we check to see if the dataset count has
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
-        val totalItemCountWithoutSpecials = totalItemCount - specialItemCount
+        val totalItemCountWithoutSpecials = totalItemCount
         if (loading && totalItemCountWithoutSpecials > previousTotalItemCount) {
             loading = false
             previousTotalItemCount = totalItemCountWithoutSpecials
@@ -110,7 +113,6 @@ abstract class EndlessRecyclerViewScrollListener(private val params: Params) : R
     abstract fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView)
 
     data class Params(
-            var specialItemCount: Int = 0,
             var visibleThreshold: Int = 5,
             var initialItemsCount: Int = 0,
             var startingPageIndex: Int = 0
