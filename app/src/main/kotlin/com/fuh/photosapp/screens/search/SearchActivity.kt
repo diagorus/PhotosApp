@@ -111,9 +111,9 @@ class SearchActivity : BaseActivity(), SearchContract.View {
         searchDisposables +=
                 textChangeEventsObs
                         .map { it.queryText().toString() }
+                        .debounce(350, TimeUnit.MILLISECONDS)
                         .filter { it.trim().isNotBlank() }
                         .distinctUntilChanged()
-                        .debounce(350, TimeUnit.MILLISECONDS)
                         .subscribeOnMain { query ->
                             if (searchPhotosAdapter.items.isNotEmpty()) {
                                 searchPhotosAdapter.items = emptyList()

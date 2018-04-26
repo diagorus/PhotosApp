@@ -65,15 +65,22 @@ class PhotosAdapter(
         return items.size
     }
 
-    private var loadingPosition = 0
+    private var loadingPosition = -1
 
     fun showLoading() {
-        loadingPosition = items.size
-        items = items.toMutableList().apply { add(loadingPosition, Photo.getNullObject()) }
+        if (loadingPosition == -1) {
+            loadingPosition = items.size
+
+            items = items.toMutableList().apply { add(loadingPosition, Photo.getNullObject()) }
+        }
     }
 
     fun hideLoading() {
-        items = items.toMutableList().apply { removeAt(loadingPosition) }
+        if (loadingPosition != -1) {
+            items = items.toMutableList().apply { removeAt(loadingPosition) }
+
+            loadingPosition = -1
+        }
     }
 
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
