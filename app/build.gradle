@@ -94,6 +94,9 @@ dependencies {
     //ThreeTenABP
     implementation "com.jakewharton.threetenabp:threetenabp:$threeTenAbpVersion"
 
+    //Koin DI
+    implementation "org.koin:koin-android:$koin_version"
+
     //Junit
     testImplementation "junit:junit:$junitVersion"
     //TestRunner

@@ -73,6 +73,7 @@ class PhotosAdapter(
 
             items = items.toMutableList().apply { add(loadingPosition, Photo.getNullObject()) }
         }
+
     }
 
     fun hideLoading() {
